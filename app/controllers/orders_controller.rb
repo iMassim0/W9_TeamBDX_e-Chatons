@@ -2,13 +2,13 @@ class OrdersController < ApplicationController
 
   def new
     set_user
-    @cart = @user.cart
+    set_cart
     @order = Order.new
   end
 
   def create
     set_user
-    @cart = @user.cart
+    set_cart
     calcul_total
     @order = Order.new(user: current_user)
     @order.purchased_items << current_user.added_items

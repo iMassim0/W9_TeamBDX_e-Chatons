@@ -26,15 +26,24 @@ end
 
     def set_cart
       if @cart = Cart.find_by(session: session[:cart])
+        p "#{session[:cart]} - find by session"
+        p "#{session[:user_id]}"
+        p @cart
         if !@cart.user && user_signed_in?
-            current_user.cart.destroy
-            @cart.update(user: current_user, session: nil)
+            if current_user.cart
+              current_user.cart.destroy
+            end
+          @cart.update(user: current_user, session: nil)
+            p @cart
         end
       elsif user_signed_in? && current_user.cart
+          p "#{session[:cart]} - user_signed_in? && current_user.cart"
+            p @cart
         @cart = current_user.cart
       else
         session[:cart] = SecureRandom.base64(10)
         @cart = Cart.create(session: session[:cart])
+          p @cart
       end
     end
 

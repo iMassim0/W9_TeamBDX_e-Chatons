@@ -136,20 +136,20 @@ class CartsController < ApplicationController
     #     # session[:cart_id] = @cart.id
     #   end
     # end
-
-    def set_cart
-      if @cart = Cart.find_by(session: session[:cart])
-        if !@cart.user && user_signed_in?
-            current_user.cart.destroy
-            @cart.update(user: current_user, session: nil)
-        end
-      elsif user_signed_in? && current_user.cart
-        @cart = current_user.cart
-      else
-        session[:cart] = SecureRandom.base64(10)
-        @cart = Cart.create(session: session[:cart])
-      end
-    end
+    #
+    # def set_cart
+    #   if @cart = Cart.find_by(session: session[:cart])
+    #     if !@cart.user && user_signed_in?
+    #         current_user.cart.destroy
+    #         @cart.update(user: current_user, session: nil)
+    #     end
+    #   elsif user_signed_in? && current_user.cart
+    #     @cart = current_user.cart
+    #   else
+    #     session[:cart] = SecureRandom.base64(10)
+    #     @cart = Cart.create(session: session[:cart])
+    #   end
+    # end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def cart_params

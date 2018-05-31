@@ -1,6 +1,6 @@
 <% if user_signed_in? %>
-<% if @user.added_items != nil %>
-  <% @user.added_items.each do |item| %>
+<% if @cart.added_items != nil %>
+  <% @cart.added_items.each do |item| %>
     <div class="dropdown-item-text">
       <div class="d-flex bd-highlight">
         <div class="p-2 bd-highlights"><%= item.title %></div>
