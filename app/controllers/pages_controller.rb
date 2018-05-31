@@ -5,6 +5,7 @@ class PagesController < ApplicationController
   def index
     set_all_items
     set_user
+    set_cart
   end
 
   def about

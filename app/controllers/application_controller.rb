@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
   include ItemsHelper
 
-  helper_method :set_user, :set_item, :set_all_users, :calcul_total, :set_all_items, :require_admin, :require_login, :user_admin?
+  helper_method :set_user, :set_item, :set_all_users, :calcul_total, :set_all_items, :require_admin, :require_login, :user_admin?, :set_cart
   before_action :configure_permitted_parameters, :set_user, if: :devise_controller?
 
   def require_login
@@ -23,6 +23,20 @@ def require_admin
   end
 end
 
+
+    def set_cart
+      if @cart = Cart.find_by(session: session[:cart])
+        if !@cart.user && user_signed_in?
+            current_user.cart.destroy
+            @cart.update(user: current_user, session: nil)
+        end
+      elsif user_signed_in? && current_user.cart
+        @cart = current_user.cart
+      else
+        session[:cart] = SecureRandom.base64(10)
+        @cart = Cart.create(session: session[:cart])
+      end
+    end
 
 def set_user
   if current_user

@@ -1,13 +1,12 @@
 class CartsController < ApplicationController
-  before_action :set_cart, only: [:show, :edit, :update, :destroy, :index, :add_to_cart, :delete_to_cart]
+  before_action :set_cart, only: [:show, :edit, :update, :destroy, :index, :add_to_cart, :delete_to_cart, :calcul_total]
   # GET /carts
-  before_action :require_login, only: [:show, :edit, :update, :destroy, :index, :add_to_cart, :delete_to_cart]
+  # before_action :require_login, only: [:show, :edit, :update, :destroy, :index, :add_to_cart, :delete_to_cart]
 
 
   # GET /carts.json
   def index
       @user = current_user
-      @items = @user.added_items
       if Cart.where(user: @user)
         @total = calcul_total
       end
@@ -123,18 +122,32 @@ class CartsController < ApplicationController
 
   private
     # Use callbacks to share common setup or constraints between actions.
+    # def set_cart
+    #   if user_signed_in? && current_user.cart
+    #     @cart = current_user.cart
+    #   elsif user_signed_in?
+    #     @cart = Cart.create(user: current_user)
+    #   elsif @cart = Cart.find_by(id: session[:cart_id])
+    #   else
+    #     flash[:error] = "Merci de vous connecter pour accéder à cette page."
+    #     redirect_to new_user_session_path
+    #     # p session[:session_id]
+    #     # @cart = Cart.create(user: session[:session_id])
+    #     # session[:cart_id] = @cart.id
+    #   end
+    # end
+
     def set_cart
-      if user_signed_in? && current_user.cart
+      if @cart = Cart.find_by(session: session[:cart])
+        if !@cart.user && user_signed_in?
+            current_user.cart.destroy
+            @cart.update(user: current_user, session: nil)
+        end
+      elsif user_signed_in? && current_user.cart
         @cart = current_user.cart
-      elsif user_signed_in?
-        @cart = Cart.create(user: current_user)
-      elsif @cart = Cart.find_by(id: session[:cart_id])
       else
-        flash[:error] = "Merci de vous connecter pour accéder à cette page."
-        redirect_to new_user_session_path
-        # p session[:session_id]
-        # @cart = Cart.create(user: session[:session_id])
-        # session[:cart_id] = @cart.id
+        session[:cart] = SecureRandom.base64(10)
+        @cart = Cart.create(session: session[:cart])
       end
     end
 

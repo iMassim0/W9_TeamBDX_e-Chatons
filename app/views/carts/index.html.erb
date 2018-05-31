@@ -11,7 +11,7 @@
       </tr>
     </thead>
     <tbody>
-      <% @user.added_items.each do |item| %>
+      <% @cart.added_items.each do |item| %>
         <tr scope="row text-center align-center">
           <td><%= image_tag item.item_pic_url, size: "30x30" %> <%= item.title %></td>
           <td class="row">
@@ -36,7 +36,11 @@
           <td></td>
           <td><strong class="float-right">TOTAL</strong></td>
           <td><strong><%= calcul_total %> €</strong></td>
-          <td> <%= form_for @cart, url: {action: :payment, cart: @cart}, method: :post do |f| %>
+          <td>
+              <% if !user_signed_in? %>
+                  <%= link_to "Se connecter pour passer la commande", new_user_session_path, class: "btn btn-warning" %>
+              <% else %>
+                <%= form_for @cart, url: {action: :payment, cart: @cart}, method: :post do |f| %>
                   <script
                     src="https://checkout.stripe.com/checkout.js" class="stripe-button"
                     data-key="pk_test_e9HqqZw1jm0zaJWm0tfW7izo"
@@ -50,6 +54,7 @@
                     data-zip-code="false">
                   </script>
                 <% end %>
+              <% end %>
           </td>
         </tr>
     </tbody>

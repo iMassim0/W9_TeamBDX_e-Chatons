@@ -7,9 +7,9 @@
       <p class="card-text" style="height: 3rem;"><%= item.description %></p>
       <p class="card-text"><small class="text-muted"><%= item.price %> €</small></p>
       <a href="<%= item_path(item) %>" class="btn btn-info">Show </a>
-      <% if user_signed_in? %>
+
       <%= link_to 'Buy', adding_path(item), method: 'post', class: "btn btn-warning" %>
-      <% end %>
+
     </div>
   </div>
 </div>
